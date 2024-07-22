@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Msync</title>
+    <link rel="stylesheet" href="msync.css" />
+  </head>
+  <body>
+
+    <div class="msync">
+      <div class="black-bg">
+      </div>
+      <div class="white-bg">
+      </div>
+      <div class="container">
+        <div class="show-op">
+        Show operator your ticket
+        </div>
+        <div class="video-element">
+          <video autoplay muted loop id="bgVideo">
+            <source src="MS.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+        </div>
+        <div class="timer" id="clock">
+        2:13:17 PM
+        </div>
+        <div class="container-1">
+          <div class="fare-type">
+          Adult Non-Rush Hour
+          </div>
+          <div class="location-coverage">
+          Minneapolis/ St. Paul Metro Area
+          </div>
+          <span class="expiration" id="date">
+          Expires Jul 16, 2024 at 4:40 PM
+          </span>
+        </div>
+      </div>
+      <span class="metro-transit">
+      Metro Transit
+      </span>
+    </div>
+
+    <script>
+      function updateClock() {
+        const now = new Date();
+        let hours = now.getHours();
+        const minutes = String(now.getMinutes()).padStart(2, "0");
+        const seconds = String(now.getSeconds()).padStart(2, "0");
+        const ampm = hours >= 12 ? "PM" : "AM";
+        hours = hours % 12;
+        hours = hours ? hours : 12; // the hour '0' should be '12'
+        const timeString = `${hours}:${minutes}:${seconds} ${ampm}`;
+        document.getElementById("clock").textContent = timeString;
+      }
+
+      function updateDateAndStaticClock() {
+        const now = new Date();
+        const options = { year: "numeric", month: "short", day: "numeric" };
+        const dateString = now.toLocaleDateString("en-US", options);
+
+        const staticHoursOffset = Math.floor(Math.random() * 2) + 1; // 1 or 2 hours
+        const staticTime = new Date(
+          now.getTime() + staticHoursOffset * 60 * 60 * 1000
+        );
+        let staticHours = staticTime.getHours();
+        const staticMinutes = String(staticTime.getMinutes()).padStart(2, "0");
+        const staticAmPm = staticHours >= 12 ? "PM" : "AM";
+        staticHours = staticHours % 12;
+        staticHours = staticHours ? staticHours : 12; // the hour '0' should be '12'
+        const staticTimeString = `${staticHours}:${staticMinutes} ${staticAmPm}`;
+
+        document.getElementById(
+          "date"
+        ).textContent =`Expires ${dateString} at ${staticTimeString}`;
+      }
+
+      function updateRushHourStatus() {
+        const now = new Date();
+        const hours = now.getHours();
+        let status = "Non-Rush Hour";
+
+        if ((hours >= 6 && hours < 9) || (hours >= 15 && hours < 18.5)) {
+          status = "Rush Hour";
+        }
+
+        document.getElementById("rushHourStatus").textContent = status;
+      }
+
+      setInterval(updateClock, 1000);
+      updateClock(); // initial call
+      updateDateAndStaticClock(); // initial call
+      updateRushHourStatus(); // initial call
+      setInterval(updateRushHourStatus, 60000); // Update every minute
+    </script>
+
+  </body>
+</html>
